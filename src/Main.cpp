@@ -3,6 +3,7 @@
 #include <iostream>
 #include <iterator>
 
+#include "ImageViewerApp.hpp"
 #include "QOIDecoder.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -40,6 +41,11 @@ int main(int argc, char *argv[])
 
     stbi_image_free(data);
     data = nullptr;
+
+    {
+        ImageViewerApp viewerApp;
+        viewerApp.Run(argv[1]);
+    }
 
     return 0;
 }

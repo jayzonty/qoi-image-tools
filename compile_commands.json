@@ -1,12 +1,22 @@
 [
 {
   "directory": "/home/jayzon/Documents/Projects/qoi-image-tools/build",
-  "command": "/usr/bin/c++  -I/home/jayzon/Documents/Projects/qoi-image-tools/deps/stbi -I/home/jayzon/Documents/Projects/qoi-image-tools/include -std=gnu++11 -o CMakeFiles/qoi-image-tools.dir/src/Main.cpp.o -c /home/jayzon/Documents/Projects/qoi-image-tools/src/Main.cpp",
+  "command": "/usr/bin/cc  -I/home/jayzon/Documents/Projects/qoi-image-tools/deps/glad/include -I/home/jayzon/Documents/Projects/qoi-image-tools/deps/glm/include -I/home/jayzon/Documents/Projects/qoi-image-tools/deps/stbi -I/home/jayzon/Documents/Projects/qoi-image-tools/include  -o CMakeFiles/qoi-image-tools.dir/deps/glad/src/glad.c.o -c /home/jayzon/Documents/Projects/qoi-image-tools/deps/glad/src/glad.c",
+  "file": "/home/jayzon/Documents/Projects/qoi-image-tools/deps/glad/src/glad.c"
+},
+{
+  "directory": "/home/jayzon/Documents/Projects/qoi-image-tools/build",
+  "command": "/usr/bin/c++  -I/home/jayzon/Documents/Projects/qoi-image-tools/deps/glad/include -I/home/jayzon/Documents/Projects/qoi-image-tools/deps/glm/include -I/home/jayzon/Documents/Projects/qoi-image-tools/deps/stbi -I/home/jayzon/Documents/Projects/qoi-image-tools/include -std=gnu++11 -o CMakeFiles/qoi-image-tools.dir/src/ImageViewerApp.cpp.o -c /home/jayzon/Documents/Projects/qoi-image-tools/src/ImageViewerApp.cpp",
+  "file": "/home/jayzon/Documents/Projects/qoi-image-tools/src/ImageViewerApp.cpp"
+},
+{
+  "directory": "/home/jayzon/Documents/Projects/qoi-image-tools/build",
+  "command": "/usr/bin/c++  -I/home/jayzon/Documents/Projects/qoi-image-tools/deps/glad/include -I/home/jayzon/Documents/Projects/qoi-image-tools/deps/glm/include -I/home/jayzon/Documents/Projects/qoi-image-tools/deps/stbi -I/home/jayzon/Documents/Projects/qoi-image-tools/include -std=gnu++11 -o CMakeFiles/qoi-image-tools.dir/src/Main.cpp.o -c /home/jayzon/Documents/Projects/qoi-image-tools/src/Main.cpp",
   "file": "/home/jayzon/Documents/Projects/qoi-image-tools/src/Main.cpp"
 },
 {
   "directory": "/home/jayzon/Documents/Projects/qoi-image-tools/build",
-  "command": "/usr/bin/c++  -I/home/jayzon/Documents/Projects/qoi-image-tools/deps/stbi -I/home/jayzon/Documents/Projects/qoi-image-tools/include -std=gnu++11 -o CMakeFiles/qoi-image-tools.dir/src/QOIDecoder.cpp.o -c /home/jayzon/Documents/Projects/qoi-image-tools/src/QOIDecoder.cpp",
+  "command": "/usr/bin/c++  -I/home/jayzon/Documents/Projects/qoi-image-tools/deps/glad/include -I/home/jayzon/Documents/Projects/qoi-image-tools/deps/glm/include -I/home/jayzon/Documents/Projects/qoi-image-tools/deps/stbi -I/home/jayzon/Documents/Projects/qoi-image-tools/include -std=gnu++11 -o CMakeFiles/qoi-image-tools.dir/src/QOIDecoder.cpp.o -c /home/jayzon/Documents/Projects/qoi-image-tools/src/QOIDecoder.cpp",
   "file": "/home/jayzon/Documents/Projects/qoi-image-tools/src/QOIDecoder.cpp"
 }
 ]
