@@ -1,3 +1,6 @@
+#ifndef QOIDECODER_HEADER
+#define QOIDECODER_HEADER
+
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -84,3 +87,5 @@ private:
     static uint32_t BytesToUint32(uint8_t b0, uint8_t b1, uint8_t b2, uint8_t b3);
 };
 }
+
+#endif // QOIDECODER_HEADER
