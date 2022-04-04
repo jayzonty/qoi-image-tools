@@ -43,8 +43,9 @@ public:
     /**
      * @brief Runs the application
      * @param[in] qoiImagePath Path to the QOI format image
+     * @param[in] isVerbose Flag indicating whether to run the viewer in verbose mode
      */
-    void Run(const std::string &qoiImagePath);
+    void Run(const std::string &qoiImagePath, bool isVerbose = false);
 
 private:
     /**

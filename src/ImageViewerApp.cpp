@@ -28,8 +28,9 @@ ImageViewerApp::~ImageViewerApp()
 /**
  * @brief Runs the application
  * @param[in] qoiImagePath Path to the QOI format image
+ * @param[in] isVerbose Flag indicating whether to run the viewer in verbose mode
  */
-void ImageViewerApp::Run(const std::string &qoiImagePath)
+void ImageViewerApp::Run(const std::string &qoiImagePath, bool isVerbose)
 {
     std::vector<uint8_t> data = {};
     uint32_t imageWidth, imageHeight;
@@ -40,6 +41,13 @@ void ImageViewerApp::Run(const std::string &qoiImagePath)
         std::cerr << "Failed to decode " << qoiImagePath << std::endl;
         return;
     }
+
+	if (isVerbose)
+	{
+		std::cout << "Image file: " << qoiImagePath << "\n";
+		std::cout << "Dimensions: " << imageWidth << " x " << imageHeight << "\n";
+		std::cout << "Channels: " << static_cast<uint32_t>(imageChannels) << std::endl;
+	}
 
     // Initialize GLFW
 	int glfwInitStatus = glfwInit();
