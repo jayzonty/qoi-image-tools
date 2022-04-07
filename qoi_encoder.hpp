@@ -1,8 +1,14 @@
-#include "qoi_encoder.hpp"
+#ifndef QOI_ENCODER_HEADER
+#define QOI_ENCODER_HEADER
 
 #include <array>
-#include <cstddef>
+#include <cstdint>
 #include <fstream>
+#include <string>
+#include <vector>
+
+#ifndef QOI_CHUNK_TAGS
+#define QOI_CHUNK_TAGS
 
 #define QOI_OP_RGB      0b11111110
 #define QOI_OP_RGBA     0b11111111
@@ -11,6 +17,8 @@
 #define QOI_OP_LUMA     0b10000000
 #define QOI_OP_RUN      0b11000000
 
+#endif // QOI_CHUNK_TAGS
+
 namespace qoi
 {
 /**
@@ -18,7 +26,7 @@ namespace qoi
  * @param[in] val Value
  * @param[in] buffer Buffer
  */
-void WriteBytes(uint32_t val, std::vector<uint8_t> &buffer)
+inline void WriteBytes(uint32_t val, std::vector<uint8_t> &buffer)
 {
     uint8_t b0 = static_cast<uint8_t>(val >> 24);
     uint8_t b1 = static_cast<uint8_t>((val & 0x00FF0000) >> 16);
@@ -32,43 +40,15 @@ void WriteBytes(uint32_t val, std::vector<uint8_t> &buffer)
 }
 
 /**
- * @brief Encodes the specified array of pixel colors to a QOI image file
- * @param[in] inPixelColors Array of pixel colors
- * @param[in] imageWidth Image width
- * @param[in] imageHeight Image height
- * @param[in] numChannels Number of channels in the image
- * @param[in] colorSpace Color space of the image
- * @param[in] outputFilePath File path of the output image file
- */
-bool Encode(const std::vector<uint8_t> &inPixelColors, const uint32_t &imageWidth, const uint32_t &imageHeight, const uint8_t &numChannels, const uint8_t &colorSpace, const std::string &outputFilePath)
-{
-    std::vector<uint8_t> bytesToWrite = {};
-    if (!Encode(inPixelColors, imageWidth, imageHeight, numChannels, colorSpace, bytesToWrite))
-    {
-        return false;
-    }
-
-    std::ofstream file(outputFilePath, std::ios::binary);
-    if (file.fail())
-    {
-        return false;
-    }
-
-    file.write(reinterpret_cast<char*>(bytesToWrite.data()), bytesToWrite.size());
-
-    return true;
-}
-
-/**
  * @brief Encodes the specified array of pixel colors to QOI format, and stores the result in an array of bytes
  * @param[in] inPixelColors Array of pixel colors
  * @param[in] imageWidth Image width
  * @param[in] imageHeight Image height
  * @param[in] numChannels Number of channels in the image
- * @param[in] colorSpace Color space of the image (0 = sRGB, 1 = Linear)
+ * @param[in] colorSpace Color space of the image
  * @param[out] outBytes Array of bytes where the resulting bytes will be stored
  */
-bool Encode(const std::vector<uint8_t> &inPixelColors, const uint32_t &imageWidth, const uint32_t &imageHeight, const uint8_t &numChannels, const uint8_t &colorSpace, std::vector<uint8_t> &outBytes)
+inline bool Encode(const std::vector<uint8_t> &inPixelColors, const uint32_t &imageWidth, const uint32_t &imageHeight, const uint8_t &numChannels, const uint8_t &colorSpace, std::vector<uint8_t> &outBytes)
 {
     // --- Header ---
     outBytes.push_back('q');
@@ -200,4 +180,34 @@ bool Encode(const std::vector<uint8_t> &inPixelColors, const uint32_t &imageWidt
 
     return true;
 }
+
+/**
+ * @brief Encodes the specified array of pixel colors to a QOI image file
+ * @param[in] inPixelColors Array of pixel colors
+ * @param[in] imageWidth Image width
+ * @param[in] imageHeight Image height
+ * @param[in] numChannels Number of channels in the image
+ * @param[in] colorSpace Color space of the image
+ * @param[in] outputFilePath File path of the output image file
+ */
+inline bool Encode(const std::vector<uint8_t> &inPixelColors, const uint32_t &imageWidth, const uint32_t &imageHeight, const uint8_t &numChannels, const uint8_t &colorSpace, const std::string &outputFilePath)
+{
+    std::vector<uint8_t> bytesToWrite = {};
+    if (!Encode(inPixelColors, imageWidth, imageHeight, numChannels, colorSpace, bytesToWrite))
+    {
+        return false;
+    }
+
+    std::ofstream file(outputFilePath, std::ios::binary);
+    if (file.fail())
+    {
+        return false;
+    }
+
+    file.write(reinterpret_cast<char*>(bytesToWrite.data()), bytesToWrite.size());
+
+    return true;
 }
+}
+
+#endif // QOI_ENCODER_HEADER 

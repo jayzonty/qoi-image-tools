@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 # Project name
-project(qoi-image-tools)
+project(qoi-tools)
 
 find_package(OpenGL REQUIRED)
 find_package(glfw3 REQUIRED)
@@ -14,20 +14,18 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Specify include directories
-include_directories(deps/glad/include deps/glm/include deps/stbi ${GLFW_INCLUDE_DIRS} include)
+include_directories(deps/glad/include deps/glm/include deps/stbi ${GLFW_INCLUDE_DIRS} .)
 
 # Set SOURCES to contain all the source files
 set(SOURCES
     deps/glad/src/glad.c
 
-    src/ImageViewerApp.cpp
-    src/Main.cpp
-    src/qoi_decoder.cpp
-    src/qoi_encoder.cpp
+    viewer/ImageViewerApp.cpp
+    viewer/ImageViewerMain.cpp
 )
 
 # Executable
-add_executable(qoi-image-tools ${SOURCES})
+add_executable(qoi-tools ${SOURCES})
 
 # Libraries
-target_link_libraries(qoi-image-tools ${OPENGL_gl_LIBRARY} glfw ${CMAKE_DL_LIBS})
+target_link_libraries(qoi-tools ${OPENGL_gl_LIBRARY} glfw ${CMAKE_DL_LIBS})

@@ -1,8 +1,14 @@
-#include "qoi_decoder.hpp"
+#ifndef QOI_DECODER_HEADER
+#define QOI_DECODER_HEADER
 
 #include <array>
-#include <cstddef>
+#include <cstdint>
 #include <fstream>
+#include <string>
+#include <vector>
+
+#ifndef QOI_CHUNK_TAGS
+#define QOI_CHUNK_TAGS
 
 #define QOI_OP_RGB      0b11111110
 #define QOI_OP_RGBA     0b11111111
@@ -11,14 +17,25 @@
 #define QOI_OP_LUMA     0b10000000
 #define QOI_OP_RUN      0b11000000
 
+#endif // QOI_CHUNK_TAGS
+
 namespace qoi
 {
+/**
+ * Colorspace enum
+ */
+enum class ColorSpace
+{
+    SRGB,
+    LINEAR
+};
+
 /**
  * @brief Gets the byte representing the red component of the specified pixel color.
  * @param[in] color 32-bit representation of the color (RGBA)
  * @return Byte representing the red component of the specified color
  */
-uint8_t GetRed(uint32_t pixel)
+inline uint8_t GetRed(uint32_t pixel)
 {
     return static_cast<uint8_t>(pixel >> 24);
 }
@@ -28,7 +45,7 @@ uint8_t GetRed(uint32_t pixel)
  * @param[in] color 32-bit representation of the color (RGBA)
  * @return Byte representing the green component of the specified color
  */
-uint8_t GetGreen(uint32_t pixel)
+inline uint8_t GetGreen(uint32_t pixel)
 {
     return static_cast<uint8_t>((pixel & 0x00FF0000) >> 16);
 }
@@ -38,7 +55,7 @@ uint8_t GetGreen(uint32_t pixel)
  * @param[in] color 32-bit representation of the color (RGBA)
  * @return Byte representing the blue component of the specified color
  */
-uint8_t GetBlue(uint32_t pixel)
+inline uint8_t GetBlue(uint32_t pixel)
 {
     return static_cast<uint8_t>((pixel & 0x0000FF00) >> 8);
 }
@@ -48,7 +65,7 @@ uint8_t GetBlue(uint32_t pixel)
  * @param[in] color 32-bit representation of the color (RGBA)
  * @return Byte representing the alpha component of the specified color
  */
-uint8_t GetAlpha(uint32_t pixel)
+inline uint8_t GetAlpha(uint32_t pixel)
 {
     return static_cast<uint8_t>(pixel);
 }
@@ -61,32 +78,11 @@ uint8_t GetAlpha(uint32_t pixel)
  * @param[in] b3 Byte 3
  * @return Packed value
  */
-uint32_t BytesToUint32(uint8_t b0, uint8_t b1, uint8_t b2, uint8_t b3)
+inline uint32_t BytesToUint32(uint8_t b0, uint8_t b1, uint8_t b2, uint8_t b3)
 {
     uint32_t ret = 0;
     ret = (b0 << 24) | (b1 << 16) | (b2 << 8) | b3;
     return ret;
-}
-/**
- * @brief Decodes a QOI format image given data from a given file path.
- * @param[in] inFilePath Path to the QOI file to decode
- * @param[out] outPixelColors Vector where the decoded pixel colors will be placed
- * @param[out] outImageWidth Width of the decoded image
- * @param[out] outImageHeight Height of the decoded image
- * @param[out] outNumChannels Number of color channels in the decoded image
- * @param[out] outColorSpace Colorspace of the decoded image
- * @return Flag indicating whether the decoding process was successful or not.
- */
-bool Decode(const std::string &inFilePath, std::vector<uint8_t> &outPixelColors, uint32_t &outImageWidth, uint32_t &outImageHeight, uint8_t &outNumChannels, ColorSpace &outColorSpace)
-{
-    std::ifstream file(inFilePath, std::ios::binary);
-    if (file.fail())
-    {
-        return false;
-    }
-
-    std::vector<uint8_t> bytes((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-    return Decode(bytes, outPixelColors, outImageWidth, outImageHeight, outNumChannels, outColorSpace);
 }
 
 /**
@@ -99,7 +95,7 @@ bool Decode(const std::string &inFilePath, std::vector<uint8_t> &outPixelColors,
  * @param[out] outColorSpace Colorspace of the decoded image
  * @return Flag indicating whether the decoding process was successful or not.
  */
-bool Decode(std::vector<uint8_t> &inStream, std::vector<uint8_t> &outPixelColors, uint32_t &outImageWidth, uint32_t &outImageHeight, uint8_t &outNumChannels, ColorSpace &outColorSpace)
+inline bool Decode(std::vector<uint8_t> &inStream, std::vector<uint8_t> &outPixelColors, uint32_t &outImageWidth, uint32_t &outImageHeight, uint8_t &outNumChannels, ColorSpace &outColorSpace)
 {
     outPixelColors.clear();
 
@@ -260,4 +256,28 @@ bool Decode(std::vector<uint8_t> &inStream, std::vector<uint8_t> &outPixelColors
 
     return true;
 }
+
+/**
+ * @brief Decodes a QOI format image given data from a given file path.
+ * @param[in] inFilePath Path to the QOI file to decode
+ * @param[out] outPixelColors Vector where the decoded pixel colors will be placed
+ * @param[out] outImageWidth Width of the decoded image
+ * @param[out] outImageHeight Height of the decoded image
+ * @param[out] outNumChannels Number of color channels in the decoded image
+ * @param[out] outColorSpace Colorspace of the decoded image
+ * @return Flag indicating whether the decoding process was successful or not.
+ */
+inline bool Decode(const std::string &inFilePath, std::vector<uint8_t> &outPixelColors, uint32_t &outImageWidth, uint32_t &outImageHeight, uint8_t &outNumChannels, ColorSpace &outColorSpace)
+{
+    std::ifstream file(inFilePath, std::ios::binary);
+    if (file.fail())
+    {
+        return false;
+    }
+
+    std::vector<uint8_t> bytes((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+    return Decode(bytes, outPixelColors, outImageWidth, outImageHeight, outNumChannels, outColorSpace);
 }
+}
+
+#endif // QOI_DECODER_HEADER

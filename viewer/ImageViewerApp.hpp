@@ -65,6 +65,14 @@ private:
     GLuint CreateShaderProgram(const std::string& vertexShaderFilePath, const std::string& fragmentShaderFilePath);
 
     /**
+     * @brief Creates a shader program based on the provided source codes for the vertex and fragment shaders
+     * @param[in] vertexShaderSource Vertex shader source
+     * @param[in] fragmentShaderSource Fragment shader source
+     * @return OpenGL handle to the created shader program
+     */
+    GLuint CreateShaderProgramFromSources(const std::string& vertexShaderSource, const std::string& fragmentShaderSource);
+
+    /**
      * @brief Creates a shader based on the provided shader type and the path to the file containing the shader source.
      * @param[in] shaderType Shader type
      * @param[in] shaderFilePath Path to the file containing the shader source

@@ -11,6 +11,28 @@
 #include <fstream>
 #include <iostream>
 
+const char *VERTEX_SHADER_STR = R"(
+#version 330
+layout(location = 0) in vec3 vertexPosition;
+layout(location = 1) in vec2 vertexUV;
+out vec2 fragUV;
+uniform mat4 mvp;
+void main() {
+	gl_Position = mvp * vec4(vertexPosition, 1.0);
+	fragUV = vec2(vertexUV.x, 1.0 - vertexUV.y);
+}
+)";
+
+const char *FRAG_SHADER_STR = R"(
+#version 330
+in vec2 fragUV;
+out vec4 fragColor;
+uniform sampler2D tex;
+void main() {
+	fragColor = texture(tex, fragUV);
+}
+)";
+
 /**
  * @brief Constructor
  */
@@ -132,7 +154,7 @@ void ImageViewerApp::Run(const std::string &qoiImagePath, bool isVerbose)
     }
 	glTexImage2D(GL_TEXTURE_2D, 0, texFormat, imageWidth, imageHeight, 0, texFormat, GL_UNSIGNED_BYTE, data.data());
 
-    GLuint program = CreateShaderProgram("main.vsh", "main.fsh");
+    GLuint program = CreateShaderProgramFromSources(VERTEX_SHADER_STR, FRAG_SHADER_STR);
 
     glm::vec3 cameraPosition(0.0f, 0.0f, 1.0f);
 
@@ -209,6 +231,41 @@ GLuint ImageViewerApp::CreateShaderProgram(const std::string& vertexShaderFilePa
 {
 	GLuint vertexShader = CreateShaderFromFile(GL_VERTEX_SHADER, vertexShaderFilePath);
 	GLuint fragmentShader = CreateShaderFromFile(GL_FRAGMENT_SHADER, fragmentShaderFilePath);
+
+	GLuint program = glCreateProgram();
+	glAttachShader(program, vertexShader);
+	glAttachShader(program, fragmentShader);
+
+	glLinkProgram(program);
+
+	glDetachShader(program, vertexShader);
+	glDeleteShader(vertexShader);
+	glDetachShader(program, fragmentShader);
+	glDeleteShader(fragmentShader);
+
+	// Check shader program link status
+	GLint linkStatus;
+	glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
+	if (linkStatus != GL_TRUE) {
+		char infoLog[512];
+		GLsizei infoLogLen = sizeof(infoLog);
+		glGetProgramInfoLog(program, infoLogLen, &infoLogLen, infoLog);
+		std::cerr << "program link error: " << infoLog << std::endl;
+	}
+
+	return program;
+}
+
+/**
+ * @brief Creates a shader program based on the provided source codes for the vertex and fragment shaders
+ * @param[in] vertexShaderSource Vertex shader source
+ * @param[in] fragmentShaderSource Fragment shader source
+ * @return OpenGL handle to the created shader program
+ */
+GLuint ImageViewerApp::CreateShaderProgramFromSources(const std::string& vertexShaderSource, const std::string& fragmentShaderSource)
+{
+	GLuint vertexShader = CreateShaderFromSource(GL_VERTEX_SHADER, vertexShaderSource);
+	GLuint fragmentShader = CreateShaderFromSource(GL_FRAGMENT_SHADER, fragmentShaderSource);
 
 	GLuint program = glCreateProgram();
 	glAttachShader(program, vertexShader);
