@@ -1,10 +1,8 @@
-#include "QOIEncoder.hpp"
+#include "qoi_encoder.hpp"
 
 #include <array>
 #include <cstddef>
 #include <fstream>
-#include <iostream>
-#include <type_traits>
 
 #define QOI_OP_RGB      0b11111110
 #define QOI_OP_RGBA     0b11111111
@@ -13,8 +11,26 @@
 #define QOI_OP_LUMA     0b10000000
 #define QOI_OP_RUN      0b11000000
 
-namespace QOI
+namespace qoi
 {
+/**
+ * @brief Writes the bytes representation of the specified value to the specified buffer
+ * @param[in] val Value
+ * @param[in] buffer Buffer
+ */
+void WriteBytes(uint32_t val, std::vector<uint8_t> &buffer)
+{
+    uint8_t b0 = static_cast<uint8_t>(val >> 24);
+    uint8_t b1 = static_cast<uint8_t>((val & 0x00FF0000) >> 16);
+    uint8_t b2 = static_cast<uint8_t>((val & 0x0000FF00) >> 8);
+    uint8_t b3 = static_cast<uint8_t>(val & 0x000000FF);
+
+    buffer.push_back(b0);
+    buffer.push_back(b1);
+    buffer.push_back(b2);
+    buffer.push_back(b3);
+}
+
 /**
  * @brief Encodes the specified array of pixel colors to a QOI image file
  * @param[in] inPixelColors Array of pixel colors
@@ -24,7 +40,7 @@ namespace QOI
  * @param[in] colorSpace Color space of the image
  * @param[in] outputFilePath File path of the output image file
  */
-bool QOIEncoder::Encode(const std::vector<uint8_t> &inPixelColors, const uint32_t &imageWidth, const uint32_t &imageHeight, const uint8_t &numChannels, const uint8_t &colorSpace, const std::string &outputFilePath)
+bool Encode(const std::vector<uint8_t> &inPixelColors, const uint32_t &imageWidth, const uint32_t &imageHeight, const uint8_t &numChannels, const uint8_t &colorSpace, const std::string &outputFilePath)
 {
     std::vector<uint8_t> bytesToWrite = {};
     if (!Encode(inPixelColors, imageWidth, imageHeight, numChannels, colorSpace, bytesToWrite))
@@ -49,10 +65,10 @@ bool QOIEncoder::Encode(const std::vector<uint8_t> &inPixelColors, const uint32_
  * @param[in] imageWidth Image width
  * @param[in] imageHeight Image height
  * @param[in] numChannels Number of channels in the image
- * @param[in] colorSpace Color space of the image
+ * @param[in] colorSpace Color space of the image (0 = sRGB, 1 = Linear)
  * @param[out] outBytes Array of bytes where the resulting bytes will be stored
  */
-bool QOIEncoder::Encode(const std::vector<uint8_t> &inPixelColors, const uint32_t &imageWidth, const uint32_t &imageHeight, const uint8_t &numChannels, const uint8_t &colorSpace, std::vector<uint8_t> &outBytes)
+bool Encode(const std::vector<uint8_t> &inPixelColors, const uint32_t &imageWidth, const uint32_t &imageHeight, const uint8_t &numChannels, const uint8_t &colorSpace, std::vector<uint8_t> &outBytes)
 {
     // --- Header ---
     outBytes.push_back('q');
@@ -71,12 +87,16 @@ bool QOIEncoder::Encode(const std::vector<uint8_t> &inPixelColors, const uint32_
 
     for (size_t i = 0; i < inPixelColors.size(); i += numChannels)
     {
-        uint8_t red = inPixelColors[i];
+        uint8_t red   = inPixelColors[i];
         uint8_t green = inPixelColors[i + 1];
-        uint8_t blue = inPixelColors[i + 2];
+        uint8_t blue  = inPixelColors[i + 2];
         uint8_t alpha = (numChannels == 4) ? inPixelColors[i + 3] : 255;
 
-        uint32_t currentColor = BytesToUint32(red, green, blue, alpha);
+        uint32_t currentColor = 
+            (static_cast<uint32_t>(red)   << 24) |
+            (static_cast<uint32_t>(green) << 16) |
+            (static_cast<uint32_t>(blue)  << 8) |
+            alpha;
         uint32_t hash = (static_cast<uint32_t>(red) * 3 + static_cast<uint32_t>(green) * 5 + static_cast<uint32_t>(blue) * 7 + static_cast<uint32_t>(alpha) * 11) % 64;
         if (currentColor == prevColor)
         {
@@ -112,10 +132,10 @@ bool QOIEncoder::Encode(const std::vector<uint8_t> &inPixelColors, const uint32_
             }
             else
             {
-                uint8_t prevRed = GetRed(prevColor);
-                uint8_t prevGreen = GetGreen(prevColor);
-                uint8_t prevBlue = GetBlue(prevColor);
-                uint8_t prevAlpha = GetAlpha(prevColor);
+                uint8_t prevRed   = static_cast<uint8_t>(prevColor >> 24);
+                uint8_t prevGreen = static_cast<uint8_t>((prevColor & 0x00FF0000) >> 16);
+                uint8_t prevBlue  = static_cast<uint8_t>((prevColor & 0x0000FF00) >> 8);
+                uint8_t prevAlpha = static_cast<uint8_t>(prevColor);
                 
                 // TODO: There's most likely a better way of doing this, maybe exploting the bias?
                 int32_t dr = static_cast<int32_t>(red) - static_cast<int32_t>(prevRed);
@@ -179,78 +199,5 @@ bool QOIEncoder::Encode(const std::vector<uint8_t> &inPixelColors, const uint32_
     outBytes.push_back(0x01);
 
     return true;
-}
-
-/**
- * @brief Writes the bytes representation of the specified value to the specified buffer
- * @param[in] val Value
- * @param[in] buffer Buffer
- */
-void QOIEncoder::WriteBytes(uint32_t val, std::vector<uint8_t> &buffer)
-{
-    uint8_t b0 = static_cast<uint8_t>(val >> 24);
-    uint8_t b1 = static_cast<uint8_t>((val & 0x00FF0000) >> 16);
-    uint8_t b2 = static_cast<uint8_t>((val & 0x0000FF00) >> 8);
-    uint8_t b3 = static_cast<uint8_t>(val & 0x000000FF);
-
-    buffer.push_back(b0);
-    buffer.push_back(b1);
-    buffer.push_back(b2);
-    buffer.push_back(b3);
-}
-
-/**
- * @brief Gets the byte representing the red component of the specified pixel color.
- * @param[in] color 32-bit representation of the color (RGBA)
- * @return Byte representing the red component of the specified color
- */
-uint8_t QOIEncoder::GetRed(uint32_t pixel)
-{
-    return static_cast<uint8_t>(pixel >> 24);
-}
-
-/**
- * @brief Gets the byte representing the green component of the specified pixel color.
- * @param[in] color 32-bit representation of the color (RGBA)
- * @return Byte representing the green component of the specified color
- */
-uint8_t QOIEncoder::GetGreen(uint32_t pixel)
-{
-    return static_cast<uint8_t>((pixel & 0x00FF0000) >> 16);
-}
-
-/**
- * @brief Gets the byte representing the blue component of the specified pixel color.
- * @param[in] color 32-bit representation of the color (RGBA)
- * @return Byte representing the blue component of the specified color
- */
-uint8_t QOIEncoder::GetBlue(uint32_t pixel)
-{
-    return static_cast<uint8_t>((pixel & 0x0000FF00) >> 8);
-}
-
-/**
- * @brief Gets the byte representing the alpha component of the specified pixel color.
- * @param[in] color 32-bit representation of the color (RGBA)
- * @return Byte representing the alpha component of the specified color
- */
-uint8_t QOIEncoder::GetAlpha(uint32_t pixel)
-{
-    return static_cast<uint8_t>(pixel);
-}
-
-/**
- * @brief Packs the specified set of 4 bytes into a single 32-bit unsigned integer
- * @param[in] b0 Byte 0
- * @param[in] b1 Byte 1
- * @param[in] b2 Byte 2
- * @param[in] b3 Byte 3
- * @return Packed value
- */
-uint32_t QOIEncoder::BytesToUint32(uint8_t b0, uint8_t b1, uint8_t b2, uint8_t b3)
-{
-    uint32_t ret = 0;
-    ret = (b0 << 24) | (b1 << 16) | (b2 << 8) | b3;
-    return ret;
 }
 }

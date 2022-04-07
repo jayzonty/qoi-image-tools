@@ -1,6 +1,6 @@
 #include "ImageViewerApp.hpp"
 
-#include "QOIDecoder.hpp"
+#include "qoi_decoder.hpp"
 
 #include <GLFW/glfw3.h>
 
@@ -35,8 +35,8 @@ void ImageViewerApp::Run(const std::string &qoiImagePath, bool isVerbose)
     std::vector<uint8_t> data = {};
     uint32_t imageWidth, imageHeight;
     uint8_t imageChannels;
-    QOI::ColorSpace imageColorSpace;
-    if (!QOI::QOIDecoder::Decode(qoiImagePath, data, imageWidth, imageHeight, imageChannels, imageColorSpace))
+    qoi::ColorSpace imageColorSpace;
+    if (!qoi::Decode(qoiImagePath, data, imageWidth, imageHeight, imageChannels, imageColorSpace))
     {
         std::cerr << "Failed to decode " << qoiImagePath << std::endl;
         return;

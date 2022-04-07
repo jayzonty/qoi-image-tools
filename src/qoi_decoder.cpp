@@ -1,8 +1,7 @@
-#include "QOIDecoder.hpp"
+#include "qoi_decoder.hpp"
 
 #include <array>
 #include <cstddef>
-#include <cstdint>
 #include <fstream>
 
 #define QOI_OP_RGB      0b11111110
@@ -12,8 +11,62 @@
 #define QOI_OP_LUMA     0b10000000
 #define QOI_OP_RUN      0b11000000
 
-namespace QOI
+namespace qoi
 {
+/**
+ * @brief Gets the byte representing the red component of the specified pixel color.
+ * @param[in] color 32-bit representation of the color (RGBA)
+ * @return Byte representing the red component of the specified color
+ */
+uint8_t GetRed(uint32_t pixel)
+{
+    return static_cast<uint8_t>(pixel >> 24);
+}
+
+/**
+ * @brief Gets the byte representing the green component of the specified pixel color.
+ * @param[in] color 32-bit representation of the color (RGBA)
+ * @return Byte representing the green component of the specified color
+ */
+uint8_t GetGreen(uint32_t pixel)
+{
+    return static_cast<uint8_t>((pixel & 0x00FF0000) >> 16);
+}
+
+/**
+ * @brief Gets the byte representing the blue component of the specified pixel color.
+ * @param[in] color 32-bit representation of the color (RGBA)
+ * @return Byte representing the blue component of the specified color
+ */
+uint8_t GetBlue(uint32_t pixel)
+{
+    return static_cast<uint8_t>((pixel & 0x0000FF00) >> 8);
+}
+
+/**
+ * @brief Gets the byte representing the alpha component of the specified pixel color.
+ * @param[in] color 32-bit representation of the color (RGBA)
+ * @return Byte representing the alpha component of the specified color
+ */
+uint8_t GetAlpha(uint32_t pixel)
+{
+    return static_cast<uint8_t>(pixel);
+}
+
+/**
+ * @brief Packs the specified set of 4 bytes into a single 32-bit unsigned integer
+ * @param[in] b0 Byte 0
+ * @param[in] b1 Byte 1
+ * @param[in] b2 Byte 2
+ * @param[in] b3 Byte 3
+ * @return Packed value
+ */
+uint32_t BytesToUint32(uint8_t b0, uint8_t b1, uint8_t b2, uint8_t b3)
+{
+    uint32_t ret = 0;
+    ret = (b0 << 24) | (b1 << 16) | (b2 << 8) | b3;
+    return ret;
+}
 /**
  * @brief Decodes a QOI format image given data from a given file path.
  * @param[in] inFilePath Path to the QOI file to decode
@@ -24,7 +77,7 @@ namespace QOI
  * @param[out] outColorSpace Colorspace of the decoded image
  * @return Flag indicating whether the decoding process was successful or not.
  */
-bool QOIDecoder::Decode(const std::string &inFilePath, std::vector<uint8_t> &outPixelColors, uint32_t &outImageWidth, uint32_t &outImageHeight, uint8_t &outNumChannels, ColorSpace &outColorSpace)
+bool Decode(const std::string &inFilePath, std::vector<uint8_t> &outPixelColors, uint32_t &outImageWidth, uint32_t &outImageHeight, uint8_t &outNumChannels, ColorSpace &outColorSpace)
 {
     std::ifstream file(inFilePath, std::ios::binary);
     if (file.fail())
@@ -46,7 +99,7 @@ bool QOIDecoder::Decode(const std::string &inFilePath, std::vector<uint8_t> &out
  * @param[out] outColorSpace Colorspace of the decoded image
  * @return Flag indicating whether the decoding process was successful or not.
  */
-bool QOIDecoder::Decode(std::vector<uint8_t> &inStream, std::vector<uint8_t> &outPixelColors, uint32_t &outImageWidth, uint32_t &outImageHeight, uint8_t &outNumChannels, ColorSpace &outColorSpace)
+bool Decode(std::vector<uint8_t> &inStream, std::vector<uint8_t> &outPixelColors, uint32_t &outImageWidth, uint32_t &outImageHeight, uint8_t &outNumChannels, ColorSpace &outColorSpace)
 {
     outPixelColors.clear();
 
@@ -206,60 +259,5 @@ bool QOIDecoder::Decode(std::vector<uint8_t> &inStream, std::vector<uint8_t> &ou
     }
 
     return true;
-}
-
-/**
- * @brief Gets the byte representing the red component of the specified pixel color.
- * @param[in] color 32-bit representation of the color (RGBA)
- * @return Byte representing the red component of the specified color
- */
-uint8_t QOIDecoder::GetRed(uint32_t pixel)
-{
-    return static_cast<uint8_t>(pixel >> 24);
-}
-
-/**
- * @brief Gets the byte representing the green component of the specified pixel color.
- * @param[in] color 32-bit representation of the color (RGBA)
- * @return Byte representing the green component of the specified color
- */
-uint8_t QOIDecoder::GetGreen(uint32_t pixel)
-{
-    return static_cast<uint8_t>((pixel & 0x00FF0000) >> 16);
-}
-
-/**
- * @brief Gets the byte representing the blue component of the specified pixel color.
- * @param[in] color 32-bit representation of the color (RGBA)
- * @return Byte representing the blue component of the specified color
- */
-uint8_t QOIDecoder::GetBlue(uint32_t pixel)
-{
-    return static_cast<uint8_t>((pixel & 0x0000FF00) >> 8);
-}
-
-/**
- * @brief Gets the byte representing the alpha component of the specified pixel color.
- * @param[in] color 32-bit representation of the color (RGBA)
- * @return Byte representing the alpha component of the specified color
- */
-uint8_t QOIDecoder::GetAlpha(uint32_t pixel)
-{
-    return static_cast<uint8_t>(pixel);
-}
-
-/**
- * @brief Packs the specified set of 4 bytes into a single 32-bit unsigned integer
- * @param[in] b0 Byte 0
- * @param[in] b1 Byte 1
- * @param[in] b2 Byte 2
- * @param[in] b3 Byte 3
- * @return Packed value
- */
-uint32_t QOIDecoder::BytesToUint32(uint8_t b0, uint8_t b1, uint8_t b2, uint8_t b3)
-{
-    uint32_t ret = 0;
-    ret = (b0 << 24) | (b1 << 16) | (b2 << 8) | b3;
-    return ret;
 }
 }

@@ -1,7 +1,7 @@
 
 #include "ImageViewerApp.hpp"
-#include "QOIDecoder.hpp"
-#include "QOIEncoder.hpp"
+#include "qoi_decoder.hpp"
+#include "qoi_encoder.hpp"
 #include <fstream>
 #include <string>
 
@@ -104,7 +104,7 @@ int main(int argc, char *argv[])
         memcpy(pixelsVector.data(), pixels, pixelsVector.size());
         stbi_image_free(pixels);
 
-        if (!QOI::QOIEncoder::Encode(pixelsVector, inputImageWidth, inputImageHeight, inputImageNumChannels, 0, outputFilePath))
+        if (!qoi::Encode(pixelsVector, inputImageWidth, inputImageHeight, inputImageNumChannels, 0, outputFilePath))
         {
             std::cerr << "Failed to encode " << inputFilePath << " to QOI format!" << std::endl;
         }

@@ -22,8 +22,8 @@ set(SOURCES
 
     src/ImageViewerApp.cpp
     src/Main.cpp
-    src/QOIDecoder.cpp
-    src/QOIEncoder.cpp
+    src/qoi_decoder.cpp
+    src/qoi_encoder.cpp
 )
 
 # Executable
