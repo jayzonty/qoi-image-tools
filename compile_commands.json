@@ -6,12 +6,12 @@
 },
 {
   "directory": "/home/jayzon/Documents/Projects/qoi-image-tools/build",
-  "command": "/usr/bin/c++  -I/home/jayzon/Documents/Projects/qoi-image-tools/deps/glad/include -I/home/jayzon/Documents/Projects/qoi-image-tools/deps/glm/include -I/home/jayzon/Documents/Projects/qoi-image-tools/deps/stbi -I/home/jayzon/Documents/Projects/qoi-image-tools/. -std=gnu++11 -o CMakeFiles/qoi-tools.dir/viewer/ImageViewerApp.cpp.o -c /home/jayzon/Documents/Projects/qoi-image-tools/viewer/ImageViewerApp.cpp",
-  "file": "/home/jayzon/Documents/Projects/qoi-image-tools/viewer/ImageViewerApp.cpp"
+  "command": "/usr/bin/c++  -I/home/jayzon/Documents/Projects/qoi-image-tools/deps/glad/include -I/home/jayzon/Documents/Projects/qoi-image-tools/deps/glm/include -I/home/jayzon/Documents/Projects/qoi-image-tools/deps/stbi -I/home/jayzon/Documents/Projects/qoi-image-tools/. -std=gnu++11 -o CMakeFiles/qoi-tools.dir/tools/ImageViewerApp.cpp.o -c /home/jayzon/Documents/Projects/qoi-image-tools/tools/ImageViewerApp.cpp",
+  "file": "/home/jayzon/Documents/Projects/qoi-image-tools/tools/ImageViewerApp.cpp"
 },
 {
   "directory": "/home/jayzon/Documents/Projects/qoi-image-tools/build",
-  "command": "/usr/bin/c++  -I/home/jayzon/Documents/Projects/qoi-image-tools/deps/glad/include -I/home/jayzon/Documents/Projects/qoi-image-tools/deps/glm/include -I/home/jayzon/Documents/Projects/qoi-image-tools/deps/stbi -I/home/jayzon/Documents/Projects/qoi-image-tools/. -std=gnu++11 -o CMakeFiles/qoi-tools.dir/viewer/ImageViewerMain.cpp.o -c /home/jayzon/Documents/Projects/qoi-image-tools/viewer/ImageViewerMain.cpp",
-  "file": "/home/jayzon/Documents/Projects/qoi-image-tools/viewer/ImageViewerMain.cpp"
+  "command": "/usr/bin/c++  -I/home/jayzon/Documents/Projects/qoi-image-tools/deps/glad/include -I/home/jayzon/Documents/Projects/qoi-image-tools/deps/glm/include -I/home/jayzon/Documents/Projects/qoi-image-tools/deps/stbi -I/home/jayzon/Documents/Projects/qoi-image-tools/. -std=gnu++11 -o CMakeFiles/qoi-tools.dir/tools/Main.cpp.o -c /home/jayzon/Documents/Projects/qoi-image-tools/tools/Main.cpp",
+  "file": "/home/jayzon/Documents/Projects/qoi-image-tools/tools/Main.cpp"
 }
 ]

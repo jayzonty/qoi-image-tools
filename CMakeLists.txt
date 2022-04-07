@@ -20,8 +20,8 @@ include_directories(deps/glad/include deps/glm/include deps/stbi ${GLFW_INCLUDE_
 set(SOURCES
     deps/glad/src/glad.c
 
-    viewer/ImageViewerApp.cpp
-    viewer/ImageViewerMain.cpp
+    tools/ImageViewerApp.cpp
+    tools/Main.cpp
 )
 
 # Executable

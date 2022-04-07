@@ -1,15 +1,14 @@
-
 #include "ImageViewerApp.hpp"
 #include "qoi_decoder.hpp"
 #include "qoi_encoder.hpp"
-#include <fstream>
-#include <string>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
 #include <cstring>
+#include <fstream>
 #include <iostream>
+#include <string>
 
 int main(int argc, char *argv[])
 {
