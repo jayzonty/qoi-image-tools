@@ -1,10 +1,13 @@
 # QOI Image Tools
+[Japanese (日本語版)](./README.ja-JP.md)
 
+## Overview
 This project is a personal attempt to create a set of tools for QOI (.qoi) images, and is inspired by Reducible's YouTube video entitled [How PNG Works: Compromising Speed for Quality](https://www.youtube.com/watch?v=EFUYNoFRHQI).
+![Cover Image](./doc/qoi-tools.png)
 
 Currently, the project contains the following:
-- C++ Header for a QOI Decoder `qoi_decoder.hpp`.
-- C++ Header for a QOI Encoder `qoi_encoder.hpp`.
+- C++ Header for a QOI Decoder [`qoi_decoder.hpp`](./qoi_decoder.hpp).
+- C++ Header for a QOI Encoder [`qoi_encoder.hpp`](./qoi_encoder.hpp).
 - Collection of source code for an executable that can convert an image file to QOI format, and view a QOI image in a custom-made viewer application.
 
 ## Usage
